@@ -30,6 +30,7 @@ resource "azurerm_network_interface" "web" {
 }
 
 resource "azurerm_linux_virtual_machine" "web" {
+  count                           = 0
   name                            = "northstar-lz-web-01"
   resource_group_name             = var.resource_group_name
   location                        = var.location
