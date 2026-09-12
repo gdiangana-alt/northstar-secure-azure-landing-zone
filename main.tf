@@ -42,10 +42,11 @@ module "monitoring" {
 module "webfront" {
   source = "./modules/webfront"
 
-  resource_group_name  = azurerm_resource_group.landing_zone.name
-  location             = azurerm_resource_group.landing_zone.location
-  waf_subnet_id        = module.network.waf_subnet_id
-  web_subnet_id        = module.network.web_subnet_id
-  admin_ssh_public_key = var.admin_ssh_public_key
-  tags                 = var.tags
+  resource_group_name        = azurerm_resource_group.landing_zone.name
+  location                   = azurerm_resource_group.landing_zone.location
+  waf_subnet_id              = module.network.waf_subnet_id
+  log_analytics_workspace_id = module.monitoring.log_analytics_workspace_id
+  web_subnet_id              = module.network.web_subnet_id
+  admin_ssh_public_key       = var.admin_ssh_public_key
+  tags                       = var.tags
 }
