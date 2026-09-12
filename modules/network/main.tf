@@ -93,3 +93,11 @@ resource "azurerm_network_security_rule" "allow_web_to_application" {
   resource_group_name         = var.resource_group_name
   network_security_group_name = azurerm_network_security_group.application.name
 }
+
+resource "azurerm_subnet" "waf" {
+  name                            = "waf"
+  resource_group_name             = var.resource_group_name
+  virtual_network_name            = azurerm_virtual_network.northstar.name
+  address_prefixes                = ["10.20.10.0/24"]
+  default_outbound_access_enabled = false
+}
