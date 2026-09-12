@@ -42,7 +42,6 @@ No changes. Your infrastructure matches the configuration.
 ## Scope
 
 NorthStar is portfolio and lab work, not employer production experience.
-
 Further planned work includes incident-response evidence, KQL threat-hunting queries, and enterprise identity/Zero Trust controls.
 
 
@@ -54,3 +53,5 @@ Further planned work includes incident-response evidence, KQL threat-hunting que
 - The scheduled rule `NorthStar - Failed Azure Control Plane Operation` detects failed control-plane operations in `NorthStar-Azure-RG`.
 - Detection runs every five minutes, has Medium severity, and creates Sentinel incidents.
 - Terraform validation and drift detection returned: `No changes. Your infrastructure matches the configuration.`
+
+- Incident-response evidence: [Sentinel incident response case study](docs/sentinel-incident-case-study.md)
