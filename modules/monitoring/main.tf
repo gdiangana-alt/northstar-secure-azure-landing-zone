@@ -85,3 +85,49 @@ resource "azurerm_sentinel_alert_rule_scheduled" "failed_control_plane_operation
     }
   }
 }
+resource "azurerm_sentinel_alert_rule_scheduled" "application_gateway_waf_match" {
+  name                       = "2dca2c8e-1d7f-4a1a-9f5f-0d65c566865a"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.soc.id
+  display_name               = "NorthStar - Application Gateway WAF Rule Match"
+  description                = "Detects OWASP WAF rule matches recorded by the NorthStar Application Gateway. Matches are triaged to distinguish expected validation traffic from suspicious web requests."
+  severity                   = "Low"
+  enabled                    = true
+
+  query = trimspace(<<-KQL
+    AzureDiagnostics
+    | where ResourceType == "APPLICATIONGATEWAYS"
+    | where Category == "ApplicationGatewayFirewallLog"
+    | where action_s == "Matched"
+    | project TimeGenerated, clientIp_s, requestUri_s, ruleId_s, ruleGroup_s, details_message_s, hostname_s, policyId_s
+  KQL
+  )
+
+  query_frequency      = "PT5M"
+  query_period         = "PT5M"
+  trigger_operator     = "GreaterThan"
+  trigger_threshold    = 0
+  suppression_enabled  = false
+  suppression_duration = "PT5H"
+
+  custom_details = {}
+  tactics        = []
+  techniques     = []
+
+  event_grouping {
+    aggregation_method = "AlertPerResult"
+  }
+
+  incident {
+    create_incident_enabled = true
+
+    grouping {
+      enabled                 = false
+      entity_matching_method  = "AllEntities"
+      lookback_duration       = "PT5H"
+      reopen_closed_incidents = false
+      by_alert_details        = []
+      by_custom_details       = []
+      by_entities             = []
+    }
+  }
+}
