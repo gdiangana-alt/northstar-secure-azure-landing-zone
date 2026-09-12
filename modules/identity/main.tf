@@ -10,3 +10,16 @@ resource "azurerm_role_assignment" "reader" {
   role_definition_name = "Reader"
   principal_id         = azurerm_user_assigned_identity.landing_zone.principal_id
 }
+
+
+resource "azurerm_role_assignment" "cloud_admins_contributor" {
+  scope                = var.resource_group_id
+  role_definition_name = "Contributor"
+  principal_id         = data.azuread_group.cloud_admins.object_id
+}
+
+resource "azurerm_role_assignment" "security_analysts_reader" {
+  scope                = var.resource_group_id
+  role_definition_name = "Reader"
+  principal_id         = data.azuread_group.security_analysts.object_id
+}
