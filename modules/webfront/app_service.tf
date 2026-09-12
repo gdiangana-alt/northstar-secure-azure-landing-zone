@@ -5,6 +5,7 @@ resource "azurerm_service_plan" "web" {
   os_type             = "Linux"
   sku_name            = "B1"
   tags                = var.tags
+
 }
 
 resource "azurerm_linux_web_app" "web" {
@@ -16,6 +17,9 @@ resource "azurerm_linux_web_app" "web" {
   ftp_publish_basic_authentication_enabled       = false
   webdeploy_publish_basic_authentication_enabled = false
   tags                                           = var.tags
+  identity {
+    type = "SystemAssigned"
+  }
 
   site_config {
     always_on                     = true
