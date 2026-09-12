@@ -1,60 +1,80 @@
 # NorthStar Secure Azure Landing Zone
 
-Terraform-managed Azure landing zone demonstrating practical cloud-security architecture, network segmentation, governance, and identity controls.
+Terraform-managed Azure security architecture demonstrating network segmentation, governance, identity, SOC monitoring, protected web delivery, and operational validation.
 
 ## What This Project Demonstrates
 
-- Secure Azure network design using Terraform
-- Segmentation between management, web, and application tiers
-- Governance through Azure Policy
-- Least-privilege access using a managed identity and Reader RBAC
-- Terraform drift detection and validation
+- Modular Terraform infrastructure managed through a locked Azure remote state backend
+- Segmented Azure networking with dedicated management, web, application, and WAF subnets
+- Azure Policy governance and least-privilege group-based RBAC
+- Microsoft Sentinel monitoring, analytics, incident handling, and KQL-based evidence
+- Application Gateway WAF protection for a managed Linux App Service workload
+- Azure Key Vault access through managed identity and Azure RBAC
+- Terraform validation and drift detection against the live Azure environment
 
-## Architecture
+## Deployed Architecture
 
-- Resource group: NorthStar-Landing-Zone-RG
+```mermaid
+flowchart TB
+    Internet["Internet"] --> Gateway["Application Gateway WAF"]
+    Gateway --> App["Linux App Service"]
+    App --> Vault["Azure Key Vault"]
+    Gateway --> SOC["Log Analytics and Microsoft Sentinel"]
+```
+
 - Region: Canada Central
-- Virtual network: northstar-lz-vnet
-- Address space: 10.20.0.0/16
-- Management subnet: 10.20.3.0/24
-- Web subnet: 10.20.1.0/24
-- Application subnet: 10.20.2.0/24
+- Resource group: `NorthStar-Landing-Zone-RG`
+- Virtual network: `northstar-lz-vnet` (`10.20.0.0/16`)
+- Management subnet: `10.20.3.0/24`
+- Web subnet: `10.20.1.0/24`
+- Application subnet: `10.20.2.0/24`
+- Dedicated WAF subnet: `10.20.10.0/24`
 - Default outbound access: disabled on every subnet
 
 ## Security Controls
 
 - Management-to-Web traffic is limited to HTTPS on TCP 443.
 - Web-to-Application traffic is limited to TCP 8443.
-- Each subnet has its own Network Security Group.
-- Broad internet-facing workload access is not deployed.
-- A custom Azure Policy audits resources missing the required Project tag.
-- The policy is scoped to the NorthStar landing-zone resource group.
-- The automation managed identity has Reader access only at resource-group scope.
+- Each tier has a dedicated Network Security Group.
+- Azure Policy audits resources missing the required `Project` tag.
+- Cloud Admins receive Contributor only at landing-zone resource-group scope.
+- Security Analysts and the automation managed identity receive Reader only at landing-zone resource-group scope.
+- Application Gateway uses OWASP CRS 3.2 in WAF Detection mode.
+- The App Service allows direct access only from the dedicated WAF subnet and denies all other direct ingress.
+- The App Service uses HTTPS, disables FTP and Web Deploy basic authentication, and has a system-assigned managed identity.
+- Key Vault uses Azure RBAC; the web application has only the `Key Vault Secrets User` role at vault scope.
+- Subscription activity and Application Gateway diagnostics are routed to `NorthStar-SOC-Workspace`.
 
-## Validation
+## Monitoring and Detection
 
-Terraform validation completed successfully.
+- Microsoft Sentinel is enabled for the SOC workspace.
+- Terraform manages the subscription diagnostic setting and Sentinel analytics rule.
+- `NorthStar - Failed Azure Control Plane Operation` detects failed control-plane operations in `NorthStar-Azure-RG`.
+- Application Gateway access, performance, and WAF logs are collected in Log Analytics.
+- Controlled validation confirmed that WAF inspection events reach the SOC workspace.
 
-Terraform compared the real Azure environment against the configuration and returned:
+## Validation Evidence
 
-No changes. Your infrastructure matches the configuration.
+- Terraform validation completed successfully.
+- Terraform drift detection returned: `No changes. Your infrastructure matches the configuration.`
+- Application Gateway backend health reported the App Service as `Healthy`.
+- A controlled request through the public gateway returned HTTP 200.
+- A controlled request triggered OWASP rule `920350`; the WAF logged it as `Matched` in Log Analytics.
+
+## Documentation
+
+- [Sentinel incident response case study](docs/sentinel-incident-case-study.md)
+- [Identity and Zero Trust design](docs/identity-zero-trust-design.md)
+- [Web front end and WAF architecture](docs/webfront-waf-architecture.md)
+- [Implementation decisions and lessons learned](docs/implementation-decisions.md)
+- [Application Gateway WAF log validation](docs/waf-log-validation.md)
+
+## Current Limitation
+
+The public Application Gateway listener uses HTTP for lab validation. The Application Gateway-to-App-Service connection uses HTTPS.
+
+A trusted public HTTPS listener requires a verified custom domain and certificate. The intended production pattern is a certificate stored in Azure Key Vault and retrieved by Application Gateway through managed identity.
 
 ## Scope
 
 NorthStar is portfolio and lab work, not employer production experience.
-Further planned work includes incident-response evidence, KQL threat-hunting queries, and enterprise identity/Zero Trust controls.
-
-
-## Monitoring and Detection
-
-- Subscription activity logs are routed to `NorthStar-SOC-Workspace` in Log Analytics.
-- Microsoft Sentinel is enabled for the SOC workspace.
-- Terraform manages the existing subscription diagnostic setting and Sentinel analytics rule.
-- The scheduled rule `NorthStar - Failed Azure Control Plane Operation` detects failed control-plane operations in `NorthStar-Azure-RG`.
-- Detection runs every five minutes, has Medium severity, and creates Sentinel incidents.
-- Terraform validation and drift detection returned: `No changes. Your infrastructure matches the configuration.`
-
-- Incident-response evidence: [Sentinel incident response case study](docs/sentinel-incident-case-study.md)
-- Identity design: [NorthStar Identity and Zero Trust Design](docs/identity-zero-trust-design.md)
-- Web-front design: [NorthStar Web Front End and WAF Architecture](docs/webfront-waf-architecture.md)
-
