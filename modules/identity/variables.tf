@@ -13,3 +13,12 @@ variable "location" {
 variable "tags" {
   type = map(string)
 }
+variable "cloud_admins_group_object_id" {
+  description = "Object ID of the NorthStar Cloud Admins Entra group."
+  type        = string
+}
+
+variable "security_analysts_group_object_id" {
+  description = "Object ID of the NorthStar Security Analysts Entra group."
+  type        = string
+}

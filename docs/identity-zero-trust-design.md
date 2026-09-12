@@ -19,7 +19,7 @@ Apply least privilege through Entra security groups, scoped Azure RBAC, managed 
 - Cloud Admins receive Contributor only at `NorthStar-Landing-Zone-RG`; they do not receive subscription-wide Owner access.
 - Security Analysts receive Reader only at `NorthStar-Landing-Zone-RG`.
 - The automation managed identity has Reader access only at the same resource-group scope.
-- Existing Entra groups are referenced as Terraform data sources so Terraform does not accidentally alter group membership or lifecycle.
+- Existing Entra groups remain outside Terraform lifecycle; approved group object IDs are supplied as Terraform inputs, so Terraform manages RBAC assignments without changing membership.
 
 ## Zero Trust Design Decisions
 
