@@ -43,4 +43,14 @@ No changes. Your infrastructure matches the configuration.
 
 NorthStar is portfolio and lab work, not employer production experience.
 
-The next phase adds Azure monitoring and security operations capabilities, including Log Analytics, Microsoft Sentinel, diagnostic settings, detection content, and incident-response documentation.
+Further planned work includes incident-response evidence, KQL threat-hunting queries, and enterprise identity/Zero Trust controls.
+
+
+## Monitoring and Detection
+
+- Subscription activity logs are routed to `NorthStar-SOC-Workspace` in Log Analytics.
+- Microsoft Sentinel is enabled for the SOC workspace.
+- Terraform manages the existing subscription diagnostic setting and Sentinel analytics rule.
+- The scheduled rule `NorthStar - Failed Azure Control Plane Operation` detects failed control-plane operations in `NorthStar-Azure-RG`.
+- Detection runs every five minutes, has Medium severity, and creates Sentinel incidents.
+- Terraform validation and drift detection returned: `No changes. Your infrastructure matches the configuration.`
