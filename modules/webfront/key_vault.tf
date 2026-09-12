@@ -23,4 +23,5 @@ resource "azurerm_role_assignment" "web_app_key_vault_secrets_user" {
   role_definition_name             = "Key Vault Secrets User"
   principal_id                     = azurerm_linux_web_app.web.identity[0].principal_id
   skip_service_principal_aad_check = true
+  count                            = 0
 }
