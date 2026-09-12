@@ -33,6 +33,7 @@ resource "azurerm_subnet" "web" {
   virtual_network_name            = azurerm_virtual_network.northstar.name
   address_prefixes                = ["10.20.1.0/24"]
   default_outbound_access_enabled = false
+  service_endpoints               = ["Microsoft.Web"]
 }
 
 resource "azurerm_subnet" "application" {
