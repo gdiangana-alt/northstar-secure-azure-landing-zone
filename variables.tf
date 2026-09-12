@@ -22,3 +22,7 @@ variable "tags" {
     CostControl = "CA$10-monthly-budget"
   }
 }
+variable "admin_ssh_public_key" {
+  description = "SSH public key for the private NorthStar web server."
+  type        = string
+}

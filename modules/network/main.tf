@@ -101,3 +101,16 @@ resource "azurerm_subnet" "waf" {
   address_prefixes                = ["10.20.10.0/24"]
   default_outbound_access_enabled = false
 }
+resource "azurerm_network_security_rule" "allow_waf_to_web" {
+  name                        = "Allow-WAF-To-Web-HTTP"
+  priority                    = 110
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "80"
+  source_address_prefix       = "10.20.10.0/24"
+  destination_address_prefix  = "10.20.1.0/24"
+  resource_group_name         = var.resource_group_name
+  network_security_group_name = azurerm_network_security_group.web.name
+}

@@ -17,3 +17,12 @@ variable "tags" {
   description = "Common NorthStar resource tags."
   type        = map(string)
 }
+variable "web_subnet_id" {
+  description = "Private subnet ID for the web workload."
+  type        = string
+}
+
+variable "admin_ssh_public_key" {
+  description = "SSH public key used for the private web server."
+  type        = string
+}
