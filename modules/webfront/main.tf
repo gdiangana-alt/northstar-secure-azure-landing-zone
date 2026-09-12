@@ -33,7 +33,7 @@ resource "azurerm_linux_virtual_machine" "web" {
   name                            = "northstar-lz-web-01"
   resource_group_name             = var.resource_group_name
   location                        = var.location
-  size                            = "Standard_D2as_v5"
+  size                            = "Standard_A1_v2"
   admin_username                  = "azureuser"
   disable_password_authentication = true
   network_interface_ids           = [azurerm_network_interface.web.id]
@@ -56,7 +56,7 @@ resource "azurerm_linux_virtual_machine" "web" {
   source_image_reference {
     publisher = "Canonical"
     offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts-gen2"
+    sku       = "22_04-lts"
     version   = "latest"
   }
 
