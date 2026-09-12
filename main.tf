@@ -38,3 +38,12 @@ module "monitoring" {
   workspace_resource_group_name = "NorthStar-Azure-RG"
   subscription_id               = data.azurerm_subscription.current.subscription_id
 }
+
+module "webfront" {
+  source = "./modules/webfront"
+
+  resource_group_name = azurerm_resource_group.landing_zone.name
+  location            = azurerm_resource_group.landing_zone.location
+  waf_subnet_id       = module.network.waf_subnet_id
+  tags                = var.tags
+}
