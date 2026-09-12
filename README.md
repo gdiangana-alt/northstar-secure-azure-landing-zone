@@ -55,3 +55,6 @@ Further planned work includes incident-response evidence, KQL threat-hunting que
 - Terraform validation and drift detection returned: `No changes. Your infrastructure matches the configuration.`
 
 - Incident-response evidence: [Sentinel incident response case study](docs/sentinel-incident-case-study.md)
+- Identity design: [NorthStar Identity and Zero Trust Design](docs/identity-zero-trust-design.md)
+- Web-front design: [NorthStar Web Front End and WAF Architecture](docs/webfront-waf-architecture.md)
+
