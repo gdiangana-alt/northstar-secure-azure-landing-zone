@@ -63,17 +63,18 @@ flowchart TB
 
 ## Documentation
 
+- [TLS and WAF operational validation](docs/tls-and-waf-operational-validation.md)
 - [Sentinel incident response case study](docs/sentinel-incident-case-study.md)
 - [Identity and Zero Trust design](docs/identity-zero-trust-design.md)
 - [Web front end and WAF architecture](docs/webfront-waf-architecture.md)
 - [Implementation decisions and lessons learned](docs/implementation-decisions.md)
 - [Application Gateway WAF log validation](docs/waf-log-validation.md)
 
-## Current Limitation
+## Certificate Lifecycle Limitation
 
-The public Application Gateway listener uses HTTP for lab validation. The Application Gateway-to-App-Service connection uses HTTPS.
+The public endpoint is available at `https://northstar.guydiangana.com` through Application Gateway WAF. HTTP is permanently redirected to HTTPS, and the App Service backend is reached over HTTPS.
 
-A trusted public HTTPS listener requires a verified custom domain and certificate. The intended production pattern is a certificate stored in Azure Key Vault and retrieved by Application Gateway through managed identity.
+The current certificate was issued through manual DNS validation. The remaining operational improvement is automated DNS validation and certificate renewal before the December 12, 2026 expiry date.
 
 ## Scope
 
