@@ -51,6 +51,7 @@ flowchart TB
 - Terraform manages the subscription diagnostic setting and Sentinel analytics rule.
 - `NorthStar - Failed Azure Control Plane Operation` detects failed control-plane operations in `NorthStar-Azure-RG`.
 - Application Gateway access, performance, and WAF logs are collected in Log Analytics.
+- `NorthStar - Application Gateway WAF Rule Match` creates Low-severity Sentinel alerts with WAF context and groups related alerts into one-hour incidents.
 - Controlled validation confirmed that WAF inspection events reach the SOC workspace.
 
 ## Validation Evidence
@@ -58,11 +59,13 @@ flowchart TB
 - Terraform validation completed successfully.
 - Terraform drift detection returned: `No changes. Your infrastructure matches the configuration.`
 - Application Gateway backend health reported the App Service as `Healthy`.
-- A controlled request through the public gateway returned HTTP 200.
+- HTTP requests to `northstar.guydiangana.com` return a permanent `301` redirect to HTTPS.
+- HTTPS requests to `northstar.guydiangana.com` return `200 OK` with a trusted Let’s Encrypt certificate.
 - A controlled request triggered OWASP rule `920350`; the WAF logged it as `Matched` in Log Analytics.
 
 ## Documentation
 
+- [Cost control and teardown runbook](docs/cost-control-and-teardown.md)
 - [TLS and WAF operational validation](docs/tls-and-waf-operational-validation.md)
 - [Sentinel incident response case study](docs/sentinel-incident-case-study.md)
 - [Identity and Zero Trust design](docs/identity-zero-trust-design.md)
