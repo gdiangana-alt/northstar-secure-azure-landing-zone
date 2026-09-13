@@ -41,11 +41,11 @@ This retains a protected application-delivery architecture while using a managed
 - Each material change was validated with `terraform fmt`, `terraform validate`, a reviewed plan, and a post-change drift check.
 - Cloud Shell session instability reinforced the value of remote state and frequent Git commits.
 
-## Current Limitation
+## Certificate Lifecycle Limitation
 
-The public Application Gateway listener currently uses HTTP for lab validation. The gateway-to-App-Service backend connection uses HTTPS.
+The public endpoint is now `https://northstar.guydiangana.com`. HTTP is permanently redirected to HTTPS, while Application Gateway reaches the App Service backend over HTTPS.
 
-A trusted public HTTPS listener requires a verified custom domain and certificate. The intended production pattern is a certificate stored in Azure Key Vault and retrieved by Application Gateway through managed identity.
+The certificate was issued through manual DNS validation and imported into Azure Key Vault. Automated DNS validation and renewal before the December 12, 2026 expiry date remain the final lifecycle improvement.
 
 ## Scope
 
