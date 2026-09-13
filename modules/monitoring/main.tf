@@ -67,6 +67,7 @@ resource "azurerm_sentinel_alert_rule_scheduled" "failed_control_plane_operation
   tactics        = []
   techniques     = []
 
+
   event_grouping {
     aggregation_method = "AlertPerResult"
   }
@@ -109,21 +110,26 @@ resource "azurerm_sentinel_alert_rule_scheduled" "application_gateway_waf_match"
   suppression_enabled  = false
   suppression_duration = "PT5H"
 
-  custom_details = {}
-  tactics        = []
-  techniques     = []
+  custom_details = {
+    SourceIP     = "clientIp_s"
+    RequestUri   = "requestUri_s"
+    WafRuleId    = "ruleId_s"
+    WafRuleGroup = "ruleGroup_s"
+  }
+  tactics    = []
+  techniques = []
 
   event_grouping {
-    aggregation_method = "AlertPerResult"
+    aggregation_method = "SingleAlert"
   }
 
   incident {
     create_incident_enabled = true
 
     grouping {
-      enabled                 = false
-      entity_matching_method  = "AllEntities"
-      lookback_duration       = "PT5H"
+      enabled                 = true
+      entity_matching_method  = "AnyAlert"
+      lookback_duration       = "PT1H"
       reopen_closed_incidents = false
       by_alert_details        = []
       by_custom_details       = []
