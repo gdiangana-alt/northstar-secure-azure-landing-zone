@@ -46,15 +46,16 @@ flowchart TB
 ## Validation
 
 - Application Gateway backend health reported the App Service as `Healthy`.
-- A controlled request through the gateway returned HTTP 200.
+- HTTP requests to `northstar.guydiangana.com` return a permanent `301` redirect to HTTPS.
+- HTTPS requests to `northstar.guydiangana.com` return `200 OK` with a trusted Let’s Encrypt certificate.
 - A controlled request to the gateway public IP produced a WAF `Matched` event for OWASP rule `920350`.
 - WAF events were confirmed in `NorthStar-SOC-Workspace`.
 
-## Current Limitation
+## Certificate Lifecycle
 
-The public listener currently uses HTTP for lab validation. Application Gateway connects to the App Service backend over HTTPS.
+Application Gateway uses a user-assigned managed identity with `Key Vault Secrets User` access to retrieve the certificate from Azure Key Vault. The HTTPS listener references the versionless Key Vault secret URI.
 
-A trusted public HTTPS listener requires a verified custom domain and certificate. The intended production design uses a Key Vault certificate retrieved by Application Gateway through managed identity.
+The current certificate was issued through manual DNS validation. The remaining operational improvement is automated DNS validation and certificate renewal before the December 12, 2026 expiry date.
 
 ## Scope
 
