@@ -25,6 +25,11 @@ resource "azurerm_application_gateway" "northstar" {
     capacity = 1
   }
 
+  ssl_policy {
+    policy_type = "Predefined"
+    policy_name = "AppGwSslPolicy20220101S"
+  }
+
   gateway_ip_configuration {
     name      = "waf-subnet"
     subnet_id = var.waf_subnet_id

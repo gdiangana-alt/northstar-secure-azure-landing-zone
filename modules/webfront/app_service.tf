@@ -23,6 +23,7 @@ resource "azurerm_linux_web_app" "web" {
 
   site_config {
     always_on                     = true
+    health_check_path             = "/"
     ip_restriction_default_action = "Deny"
 
     ip_restriction {
