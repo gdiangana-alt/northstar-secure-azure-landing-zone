@@ -25,3 +25,15 @@ resource "azurerm_role_assignment" "web_app_key_vault_secrets_user" {
   skip_service_principal_aad_check = true
 
 }
+resource "azurerm_user_assigned_identity" "application_gateway" {
+  name                = "northstar-lz-gateway-identity"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  tags                = var.tags
+}
+
+resource "azurerm_role_assignment" "application_gateway_key_vault_secrets_user" {
+  scope                = azurerm_key_vault.northstar.id
+  role_definition_name = "Key Vault Secrets User"
+  principal_id         = azurerm_user_assigned_identity.application_gateway.principal_id
+}

@@ -13,6 +13,10 @@ resource "azurerm_application_gateway" "northstar" {
   location            = var.location
   firewall_policy_id  = azurerm_web_application_firewall_policy.northstar.id
   tags                = var.tags
+  identity {
+    type         = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.application_gateway.id]
+  }
 
   sku {
     name     = "WAF_v2"
