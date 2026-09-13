@@ -46,6 +46,16 @@ The rule was tuned to:
 
 This preserves visibility while reducing incident fatigue.
 
+## Final Grouping Validation
+
+A controlled HTTPS request containing an encoded test payload returned `200 OK`, as expected while WAF operates in Detection mode.
+
+Application Gateway recorded three correlated WAF events for the same request: XSS rule `941320`, SQL injection rule `942130`, and anomaly-score evaluation rule `949110`.
+
+At the next Sentinel evaluation window, those three WAF events produced one Low-severity alert. Sentinel then created one grouped incident, `#237`, titled `NorthStar - Application Gateway WAF Rule Match`.
+
+This validates the tuned detection design: WAF context is retained while related events are consolidated into a triage-ready incident.
+
 ## Certificate Lifecycle
 
 The current certificate was issued through a manual DNS validation workflow for this portfolio environment. Renewal must occur before expiry and the renewed PFX must be imported as a new Key Vault certificate version.
