@@ -22,9 +22,10 @@ resource "azurerm_linux_web_app" "web" {
   }
 
   site_config {
-    always_on                     = true
-    health_check_path             = "/"
-    ip_restriction_default_action = "Deny"
+    always_on                         = true
+    health_check_path                 = "/"
+    health_check_eviction_time_in_min = 2
+    ip_restriction_default_action     = "Deny"
 
     ip_restriction {
       name                      = "Allow-WAF-Subnet"
