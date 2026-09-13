@@ -13,6 +13,7 @@ resource "azurerm_application_gateway" "northstar" {
   location            = var.location
   firewall_policy_id  = azurerm_web_application_firewall_policy.northstar.id
   tags                = var.tags
+
   identity {
     type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.application_gateway.id]
@@ -34,9 +35,19 @@ resource "azurerm_application_gateway" "northstar" {
     port = 80
   }
 
+  frontend_port {
+    name = "https"
+    port = 443
+  }
+
   frontend_ip_configuration {
     name                 = "public"
     public_ip_address_id = azurerm_public_ip.gateway.id
+  }
+
+  ssl_certificate {
+    name                = "northstar-key-vault-tls"
+    key_vault_secret_id = "${azurerm_key_vault.northstar.vault_uri}secrets/northstar-tls"
   }
 
   backend_address_pool {
@@ -71,12 +82,38 @@ resource "azurerm_application_gateway" "northstar" {
     protocol                       = "Http"
   }
 
+  http_listener {
+    name                           = "public-https"
+    frontend_ip_configuration_name = "public"
+    frontend_port_name             = "https"
+    protocol                       = "Https"
+    ssl_certificate_name           = "northstar-key-vault-tls"
+    host_name                      = "northstar.guydiangana.com"
+    require_sni                    = true
+  }
+
+  redirect_configuration {
+    name                 = "http-to-https"
+    redirect_type        = "Permanent"
+    target_listener_name = "public-https"
+    include_path         = true
+    include_query_string = true
+  }
+
   request_routing_rule {
-    name                       = "route-to-app-service"
+    name                        = "redirect-http-to-https"
+    rule_type                   = "Basic"
+    http_listener_name          = "public-http"
+    redirect_configuration_name = "http-to-https"
+    priority                    = 100
+  }
+
+  request_routing_rule {
+    name                       = "route-https-to-app-service"
     rule_type                  = "Basic"
-    http_listener_name         = "public-http"
+    http_listener_name         = "public-https"
     backend_address_pool_name  = "app-service-backend"
     backend_http_settings_name = "app-service-https"
-    priority                   = 100
+    priority                   = 110
   }
 }
