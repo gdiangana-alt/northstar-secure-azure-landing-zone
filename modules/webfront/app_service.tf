@@ -23,6 +23,7 @@ resource "azurerm_linux_web_app" "web" {
 
   site_config {
     always_on                         = true
+    http2_enabled                     = true
     health_check_path                 = "/"
     health_check_eviction_time_in_min = 2
     ip_restriction_default_action     = "Deny"
