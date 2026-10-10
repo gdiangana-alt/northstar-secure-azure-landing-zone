@@ -42,7 +42,7 @@ resource "azurerm_monitor_diagnostic_setting" "subscription_activity" {
 }
 resource "azurerm_sentinel_alert_rule_scheduled" "failed_control_plane_operation" {
   name                       = "0b6f52c1-4948-4c30-8191-3cbffe47825a"
-  log_analytics_workspace_id = "/subscriptions/244d087a-d706-44aa-8b72-36f3f481b025/resourceGroups/northstar-azure-rg/providers/Microsoft.OperationalInsights/workspaces/northstar-soc-workspace"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.soc.id
   display_name               = "NorthStar - Failed Azure Control Plane Operation"
   description                = "Detects failed Azure control-plane operations targeting the NorthStar environment. This rule supports monitoring for unsuccessful administrative changes that may indicate misconfiguration or suspicious management activity."
   severity                   = "Medium"
