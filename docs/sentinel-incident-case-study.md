@@ -25,7 +25,7 @@ AzureActivity
 
 ## Investigation Outcome
 
-- Incident ID: `54db208e-cd16-49f1-bb38-e3ac13816a54`
+- Incident ID: `[redacted]`
 - Incident status: Closed
 - Classification: Benign positive
 - Classification reason: Suspicious but expected
