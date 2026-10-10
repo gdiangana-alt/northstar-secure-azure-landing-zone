@@ -27,8 +27,8 @@ module "identity" {
   resource_group_id                 = azurerm_resource_group.landing_zone.id
   location                          = azurerm_resource_group.landing_zone.location
   tags                              = var.tags
-  cloud_admins_group_object_id      = "53bac32e-b067-4831-9d24-8f5866d1fb23"
-  security_analysts_group_object_id = "36c77f4d-3f74-4391-9877-d5fb7212f0dd"
+  cloud_admins_group_object_id      = var.cloud_admins_group_object_id
+  security_analysts_group_object_id = var.security_analysts_group_object_id
 }
 
 module "monitoring" {
